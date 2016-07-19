@@ -5,7 +5,7 @@ use Psr\Http\Message\ResponseInterface;
 use ScayTrase\Api\Rpc\ResponseCollectionInterface;
 use ScayTrase\Api\Rpc\RpcRequestInterface;
 
-class AsyncResponseCollection implements \IteratorAggregate,ResponseCollectionInterface
+class AsyncResponseCollection implements \IteratorAggregate, ResponseCollectionInterface
 {
     /** @var AsyncContainer[] */
     private $containers;
