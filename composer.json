@@ -1,0 +1,26 @@
+{
+  "name": "symfony-rpc/rest-rpc-client",
+  "description": "RPC Client for REST services",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pavel Batanov",
+      "email": "pavel@batanov.me"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "ScayTrase\\Api\\Rest\\": "./"
+    }
+  },
+  "require": {
+    "php": "~5.5 || ~7.0",
+    "psr/http-message": "~1.0",
+    "scaytrase/rpc-common": "^1.0",
+    "guzzlehttp/guzzle": "~6.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.8 || 5.0"
+  }
+}
