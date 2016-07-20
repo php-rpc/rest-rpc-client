@@ -13,6 +13,8 @@ abstract class GuzzleAwareTestCase extends \PHPUnit_Framework_TestCase
     private $client;
     /** @var  MockHandler */
     private $mock;
+    /** @var  HandlerStack */
+    private $stack;
 
     /**
      * @return ClientInterface
@@ -30,11 +32,19 @@ abstract class GuzzleAwareTestCase extends \PHPUnit_Framework_TestCase
         return $this->mock;
     }
 
+    /**
+     * @return HandlerStack
+     */
+    public function getStack()
+    {
+        return $this->stack;
+    }
+
     protected function setUp()
     {
-        $this->mock = new MockHandler();
-        $stack      = new HandlerStack($this->mock);
+        $this->mock  = new MockHandler();
+        $this->stack = new HandlerStack($this->mock);
 
-        $this->client = new Client(['handler' => $stack]);
+        $this->client = new Client(['handler' => $this->stack]);
     }
 }

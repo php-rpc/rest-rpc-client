@@ -9,19 +9,19 @@ class AsyncResponseCollection implements \IteratorAggregate, ResponseCollectionI
 {
     /** @var AsyncContainer[] */
     private $containers;
-    /** @var DecoderInterface */
-    private $decoder;
+    /** @var ProtocolFactoryInterface */
+    private $factory;
 
     /**
      * AsyncResponseCollection constructor.
      *
-     * @param AsyncContainer[] $containers
-     * @param DecoderInterface $decoder
+     * @param AsyncContainer[]         $containers
+     * @param ProtocolFactoryInterface $factory
      */
-    public function __construct(array $containers, DecoderInterface $decoder)
+    public function __construct(array $containers, ProtocolFactoryInterface $factory)
     {
         $this->containers = $this->reindex($containers);
-        $this->decoder    = $decoder;
+        $this->factory    = $factory;
     }
 
     private function reindex(array $containers)
@@ -53,6 +53,6 @@ class AsyncResponseCollection implements \IteratorAggregate, ResponseCollectionI
         /** @var ResponseInterface $response */
         $response = $this->containers[$hash]->getPromise()->wait();
 
-        return new SyncResponse($response, $this->decoder);
+        return new SyncResponse($response, $this->factory);
     }
 }

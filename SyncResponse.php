@@ -10,19 +10,19 @@ class SyncResponse implements RpcResponseInterface
 {
     /** @var  ResponseInterface */
     private $response;
-    /** @var DecoderInterface */
-    private $decoder;
+    /** @var ProtocolFactoryInterface */
+    private $factory;
 
     /**
      * SyncResponse constructor.
      *
-     * @param ResponseInterface $response
-     * @param DecoderInterface  $decoder
+     * @param ResponseInterface        $response
+     * @param ProtocolFactoryInterface $factory
      */
-    public function __construct(ResponseInterface $response, DecoderInterface $decoder)
+    public function __construct(ResponseInterface $response, ProtocolFactoryInterface $factory)
     {
         $this->response = $response;
-        $this->decoder  = $decoder;
+        $this->factory  = $factory;
     }
 
     /** @return RpcErrorInterface|null */
@@ -35,7 +35,7 @@ class SyncResponse implements RpcResponseInterface
         return new HttpError($this->response->getStatusCode(), $this->response->getReasonPhrase());
     }
 
-    /** @return bool */
+    /** {@inheritdoc} */
     public function isSuccessful()
     {
         $code = $this->response->getStatusCode();
@@ -45,9 +45,13 @@ class SyncResponse implements RpcResponseInterface
         return $code >= 200 && $code < 300;
     }
 
-    /** @return \stdClass|array|mixed|null */
+    /** {@inheritdoc} */
     public function getBody()
     {
-        return $this->decoder->decode($this->response);
+        if (!$this->isSuccessful()) {
+            return null;
+        }
+
+        return $this->factory->decode($this->response);
     }
 }

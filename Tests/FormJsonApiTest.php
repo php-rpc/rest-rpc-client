@@ -1,16 +1,15 @@
 <?php
-
 namespace ScayTrase\Api\Rest\Tests;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use ScayTrase\Api\Rest\Decoder\JsonDecoder;
-use ScayTrase\Api\Rest\Encoder\JsonEncoder;
+use ScayTrase\Api\Rest\Encoder\FormEncoder;
 use ScayTrase\Api\Rest\ProtocolFactory\NaiveFactory;
 use ScayTrase\Api\Rpc\RpcResponseInterface;
 
-class BasicJsonApiTest extends RestRpcClientTest
+class FormJsonApiTest extends RestRpcClientTest
 {
     public function getCases()
     {
@@ -24,9 +23,9 @@ class BasicJsonApiTest extends RestRpcClientTest
                     $method,
                     $data
                 ),
-                'factory'          => new NaiveFactory(new JsonEncoder(), new JsonDecoder(), $baseUrl),
+                'factory'          => new NaiveFactory(new FormEncoder(), new JsonDecoder(), $baseUrl),
                 'requestVerifier'  => function (RequestInterface $request) use ($method, $data, $baseUrl) {
-                    self::assertEquals($data, json_decode($request->getBody(), true));
+                    self::assertEquals(http_build_query($data), $request->getBody());
                     self::assertEquals($baseUrl.$method, $request->getUri()->getPath());
 
                     return $request;
