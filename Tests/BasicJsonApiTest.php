@@ -12,6 +12,8 @@ use ScayTrase\Api\Rpc\RpcResponseInterface;
 
 class BasicJsonApiTest extends RestRpcClientTest
 {
+    use RpcRequestMockTrait;
+
     public function getCases()
     {
         $baseUrl = '/';

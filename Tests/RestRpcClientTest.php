@@ -33,13 +33,4 @@ abstract class RestRpcClientTest extends GuzzleAwareTestCase
     }
 
     abstract protected function getCases();
-
-    protected function createRequestMock($method, $parameters)
-    {
-        $request = $this->prophesize(RpcRequestInterface::class);
-        $request->getMethod()->willReturn($method);
-        $request->getParameters()->willReturn($parameters);
-
-        return $request->reveal();
-    }
 }
