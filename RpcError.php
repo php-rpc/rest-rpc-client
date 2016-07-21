@@ -3,7 +3,7 @@ namespace ScayTrase\Api\Rest;
 
 use ScayTrase\Api\Rpc\RpcErrorInterface;
 
-final class HttpError implements RpcErrorInterface
+final class RpcError implements RpcErrorInterface
 {
     /** @var  int */
     private $code;

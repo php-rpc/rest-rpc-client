@@ -1,11 +1,11 @@
 <?php
 namespace ScayTrase\Api\Rest;
 
-use Psr\Http\Message\ResponseInterface;
+use ScayTrase\Api\Rest\Exception\ProtocolException;
 use ScayTrase\Api\Rpc\ResponseCollectionInterface;
 use ScayTrase\Api\Rpc\RpcRequestInterface;
 
-class AsyncResponseCollection implements \IteratorAggregate, ResponseCollectionInterface
+final class AsyncResponseCollection implements \IteratorAggregate, ResponseCollectionInterface
 {
     /** @var AsyncContainer[] */
     private $containers;
@@ -42,7 +42,10 @@ class AsyncResponseCollection implements \IteratorAggregate, ResponseCollectionI
         }
     }
 
-    /** {@inheritdoc} */
+    /**
+     * {@inheritdoc}
+     * @throws ProtocolException
+     */
     public function getResponse(RpcRequestInterface $request)
     {
         $hash = spl_object_hash($request);
@@ -50,9 +53,10 @@ class AsyncResponseCollection implements \IteratorAggregate, ResponseCollectionI
             throw new \OutOfBoundsException('Response collection does not contain this request');
         }
 
-        /** @var ResponseInterface $response */
-        $response = $this->containers[$hash]->getPromise()->wait();
-
-        return new SyncResponse($response, $this->factory);
+        try {
+            return $this->factory->decode($this->containers[$hash]->getPromise()->wait());
+        } catch (\LogicException $e) {
+            throw new ProtocolException($e->getMessage());
+        }
     }
 }

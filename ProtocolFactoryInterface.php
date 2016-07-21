@@ -5,6 +5,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use ScayTrase\Api\Rest\Exception\ProtocolException;
 use ScayTrase\Api\Rpc\RpcRequestInterface;
+use ScayTrase\Api\Rpc\RpcResponseInterface;
 
 interface ProtocolFactoryInterface
 {
@@ -19,7 +20,7 @@ interface ProtocolFactoryInterface
     /**
      * @param ResponseInterface $response
      *
-     * @return mixed|array|\stdClass|null
+     * @return RpcResponseInterface
      * @throws ProtocolException
      */
     public function decode(ResponseInterface $response);
