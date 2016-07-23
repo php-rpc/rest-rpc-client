@@ -61,3 +61,25 @@ $call = new MyRpcRequest('any-path-as/namespace/method', ['array' => ['of', 'par
 // Following redirects and other is up to the Guzzle client, so configure it properly
 $response = $client->invoke($call)->getResponse($call);
 ```
+
+
+## Basic routed factory
+
+```php
+$collection = new RouteCollection();
+$collection->add(
+    'namespace/method-with-argument',
+    new Route('any-path-as/method/{param}')
+)
+
+$factory = new RoutedFactory(
+    new UrlGenerator($collection, new RequestContext())
+    new JsonEncoder(), new JsonDecoder()
+);
+
+$call = new MyRpcRequest('namespace/method-with-argument', ['param' => 42, 'other_param' => 241 ]);
+
+// Will result in POST request to
+// 'any-path-as/method/42' with body param=42&other_param=241
+$response = $client->invoke($call)->getResponse($call);
+```

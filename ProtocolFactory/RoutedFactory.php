@@ -40,10 +40,7 @@ final class RoutedFactory implements ProtocolFactoryInterface
     {
         $path = $this->generator->generate($request->getMethod(), $request->getParameters());
 
-        return $this->encoder->encode(
-            new Request('POST', $path),
-            $request->getParameters()
-        );
+        return $this->encoder->encode(new Request('POST', $path), $request->getParameters());
     }
 
     /** {@inheritdoc} */

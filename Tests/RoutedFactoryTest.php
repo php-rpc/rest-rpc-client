@@ -29,9 +29,7 @@ class RoutedFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $context = new RequestContext();
-
-        $generator = new UrlGenerator($collection, $context);
+        $generator = new UrlGenerator($collection, new RequestContext());
         $factory   = new RoutedFactory($generator, new JsonEncoder(), new JsonDecoder());
 
         $data    = ['argument' => 'value'];
