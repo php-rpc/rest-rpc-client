@@ -4,6 +4,7 @@ namespace ScayTrase\Api\Rest;
 use ScayTrase\Api\Rpc\RpcErrorInterface;
 use ScayTrase\Api\Rpc\RpcResponseInterface;
 
+/** @internal */
 final class RpcResponse implements RpcResponseInterface
 {
     /** @var  \stdClass|array|mixed|null */
@@ -23,13 +24,13 @@ final class RpcResponse implements RpcResponseInterface
         $this->error = $error;
     }
 
-    /** @return RpcErrorInterface|null */
+    /** {@inheritdoc} */
     public function getError()
     {
         return $this->error;
     }
 
-    /** @return \stdClass|array|mixed|null */
+    /** {@inheritdoc} */
     public function getBody()
     {
         if ($this->isSuccessful()) {
@@ -39,7 +40,7 @@ final class RpcResponse implements RpcResponseInterface
         return null;
     }
 
-    /** @return bool */
+    /** {@inheritdoc} */
     public function isSuccessful()
     {
         return null === $this->error;

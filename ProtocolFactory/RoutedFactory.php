@@ -49,3 +49,4 @@ final class RoutedFactory implements ProtocolFactoryInterface
         return $this->decoder->decode($response);
     }
 }
+
