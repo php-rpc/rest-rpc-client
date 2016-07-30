@@ -44,9 +44,24 @@ class RoutedFactoryTest extends \PHPUnit_Framework_TestCase
                 new RoutedFactory($generator, new JsonEncoder(), new JsonDecoder()),
                 $serializer
             );
-        $data    = ['sub' => ['argument' => 'value']];
+        $data    = [
+            'sub'        => [
+                'argument' => 'value',
+                'extra'    => 'other_value',
+            ],
+            'extra'      => 'no_value',
+            'null'       => null,
+            'bool_true'  => true,
+            'bool_false' => false,
+            'array'      => [
+                'a',
+                'b',
+                'c',
+            ],
+        ];
         $request = $factory->encode($this->createRequestMock(self::PLAIN_METHOD, $data));
         self::assertSame('/namespace/value/method', $request->getUri()->getPath());
+        var_dump((string)$request->getUri());
         self::assertSame(json_encode($data), (string)$request->getBody());
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ScayTrase\Api\Rest\ProtocolFactory;
 
-use ScayTrase\Api\Rest\ProtocolFactory\Extractor\NoOpExtractor;
+use ScayTrase\Api\Rest\ProtocolFactory\Extractor\CallableExtractor;
 use Symfony\Component\Routing\Route;
 
 final class ExtractingRoute extends Route
@@ -15,12 +15,12 @@ final class ExtractingRoute extends Route
     /**
      * TransformedRoute constructor.
      *
-     * @param Route                      $route
-     * @param ArgumentExtractorInterface $extractor
+     * @param Route                               $route
+     * @param callable|ArgumentExtractorInterface $extractor
      *
      * @return static
      */
-    public static function decorate(Route $route, ArgumentExtractorInterface $extractor = null)
+    public static function decorate(Route $route, $extractor = null)
     {
         $decorator = new static(
             $route->getPath(),
@@ -33,8 +33,17 @@ final class ExtractingRoute extends Route
             $route->getCondition()
         );
 
+        if (is_callable($extractor)) {
+            $extractor = new CallableExtractor($extractor);
+        }
+
         $decorator->route     = $route;
-        $decorator->extractor = $extractor ?: new NoOpExtractor();
+        $decorator->extractor = $extractor ?:
+            new CallableExtractor(
+                function ($data) {
+                    return $data;
+                }
+            );
 
         return $decorator;
     }

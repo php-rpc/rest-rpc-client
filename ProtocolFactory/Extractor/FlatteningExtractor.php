@@ -3,9 +3,11 @@
 namespace ScayTrase\Api\Rest\ProtocolFactory\Extractor;
 
 use ScayTrase\Api\Rest\ProtocolFactory\ArgumentExtractorInterface;
+use Symfony\Component\Routing\CompiledRoute;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class FlatteningExtractor implements ArgumentExtractorInterface
+final class FlatteningExtractor implements ArgumentExtractorInterface
 {
     const KEY_SEPARATOR = '_';
 
@@ -23,7 +25,7 @@ class FlatteningExtractor implements ArgumentExtractorInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($data)
+    public function extract($data, CompiledRoute $compiledRoute, Route $route)
     {
         if (is_scalar($data)) {
             return $data;
@@ -43,21 +45,36 @@ class FlatteningExtractor implements ArgumentExtractorInterface
      */
     private function flatten($data, &$result, $key = null)
     {
+        if (is_scalar($data) || null === $data) {
+            $result[$key] = $data;
+
+            return;
+        }
+
         if (null !== $key) {
             $key .= self::KEY_SEPARATOR;
         }
 
-        foreach ($data as $data_key => $value) {
+        foreach ((array)$data as $dataKey => $value) {
             if (is_object($value)) {
                 $value = $this->normalizer->normalize($value);
             }
 
-            if (is_scalar($value)) {
-                $result[$key.$data_key] = $value;
+            $innerKey = $key.$dataKey;
+            if (is_array($value) && array_keys($value) === range(0, count($value) - 1)) {
+                if (count($value) === count(array_filter($value, 'is_scalar'))) {
+                    $result[$innerKey] = $value;
+
+                    continue;
+                }
+            }
+
+            if (is_scalar($value) || null === $data) {
+                $result[$innerKey] = $value;
                 continue;
             }
 
-            $this->flatten($value, $result, $key.$data_key);
+            $this->flatten($value, $result, $innerKey);
         }
     }
 }
