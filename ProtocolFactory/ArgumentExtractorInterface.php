@@ -2,12 +2,12 @@
 
 namespace ScayTrase\Api\Rest\ProtocolFactory;
 
-interface ArgumentTransformerInterface
+interface ArgumentExtractorInterface
 {
     /**
      * @param mixed $data
      *
      * @return mixed
      */
-    public function transform($data);
+    public function extract($data);
 }

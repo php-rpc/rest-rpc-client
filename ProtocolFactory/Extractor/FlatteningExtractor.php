@@ -1,11 +1,11 @@
 <?php
 
-namespace ScayTrase\Api\Rest\Tests;
+namespace ScayTrase\Api\Rest\ProtocolFactory\Extractor;
 
-use ScayTrase\Api\Rest\ProtocolFactory\ArgumentTransformerInterface;
+use ScayTrase\Api\Rest\ProtocolFactory\ArgumentExtractorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class FlatteningTransformer implements ArgumentTransformerInterface
+class FlatteningExtractor implements ArgumentExtractorInterface
 {
     const KEY_SEPARATOR = '_';
 
@@ -23,7 +23,7 @@ class FlatteningTransformer implements ArgumentTransformerInterface
     }
 
     /** {@inheritdoc} */
-    public function transform($data)
+    public function extract($data)
     {
         if (is_scalar($data)) {
             return $data;

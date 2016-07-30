@@ -4,6 +4,8 @@ namespace ScayTrase\Api\Rest\Tests;
 use ScayTrase\Api\Rest\Decoder\JsonDecoder;
 use ScayTrase\Api\Rest\Encoder\JsonEncoder;
 use ScayTrase\Api\Rest\ProtocolFactory\Decorator\NormalizingFactory;
+use ScayTrase\Api\Rest\ProtocolFactory\ExtractingRoute;
+use ScayTrase\Api\Rest\ProtocolFactory\Extractor\FlatteningExtractor;
 use ScayTrase\Api\Rest\ProtocolFactory\RoutedFactory;
 use ScayTrase\Api\Rest\ProtocolFactory\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
@@ -20,27 +22,23 @@ class RoutedFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testRequestGeneration()
     {
-        $collection = new RouteCollection();
+        $serializer  = new Serializer(
+            [new ObjectNormalizer()]
+        );
+        $transformer = new FlatteningExtractor($serializer);
+        $collection  = new RouteCollection();
+
         $collection->add(
             self::PLAIN_METHOD,
-            new Route(
-                'namespace/{sub_argument}/method',
-                [],
-                [
-                    'argument' => '.+',
-                ]
+            ExtractingRoute::decorate(
+                new Route('namespace/{sub_argument}/method'),
+                $transformer
             )
         );
 
-        $generator  = new UrlGenerator($collection, new RequestContext());
-        $serializer = new Serializer(
-            [new ObjectNormalizer()]
-        );
+        $generator = new UrlGenerator($collection, new RequestContext());
 
-        $generator->registerTransformer(
-            self::PLAIN_METHOD,
-            new FlatteningTransformer($serializer)
-        );
+
         $factory =
             new NormalizingFactory(
                 new RoutedFactory($generator, new JsonEncoder(), new JsonDecoder()),
