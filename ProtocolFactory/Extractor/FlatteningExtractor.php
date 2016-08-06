@@ -25,7 +25,7 @@ final class FlatteningExtractor implements ArgumentExtractorInterface
     }
 
     /** {@inheritdoc} */
-    public function extract($data, CompiledRoute $compiledRoute, Route $route)
+    public function extractUriArgs($data, CompiledRoute $compiledRoute, Route $route)
     {
         if (is_scalar($data)) {
             return $data;

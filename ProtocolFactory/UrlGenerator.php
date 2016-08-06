@@ -23,8 +23,7 @@ class UrlGenerator extends SymfonyUrlGenerator
         $compiledRoute = $route->compile();
 
         if ($route instanceof ExtractingRoute) {
-            $extractor  = $route->getExtractor();
-            $parameters = $extractor->extract($parameters, $compiledRoute, $route);
+            $parameters = $route->getExtractor()->extractUriArgs($parameters, $compiledRoute, $route);
         }
 
         return $this->doGenerate(

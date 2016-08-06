@@ -5,8 +5,10 @@ use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
 use ScayTrase\Api\Rest\DecoderInterface;
 use ScayTrase\Api\Rest\EncoderInterface;
+use ScayTrase\Api\Rest\Exception\ProtocolException;
 use ScayTrase\Api\Rest\ProtocolFactoryInterface;
 use ScayTrase\Api\Rpc\RpcRequestInterface;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class RoutedFactory implements ProtocolFactoryInterface
@@ -34,11 +36,14 @@ final class RoutedFactory implements ProtocolFactoryInterface
         $this->decoder   = $decoder;
     }
 
-
     /** {@inheritdoc} */
     public function encode(RpcRequestInterface $request)
     {
-        $path = $this->generator->generate($request->getMethod(), $request->getParameters());
+        try {
+            $path = $this->generator->generate($request->getMethod(), $request->getParameters());
+        } catch (ExceptionInterface $e) {
+            throw new ProtocolException($e->getMessage(), $e->getCode(), $e);
+        }
 
         return $this->encoder->encode(new Request('POST', $path), $request->getParameters());
     }

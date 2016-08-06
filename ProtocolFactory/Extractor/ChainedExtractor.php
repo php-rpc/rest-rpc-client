@@ -30,10 +30,10 @@ final class ChainedExtractor implements ArgumentExtractorInterface
      *
      * @return mixed
      */
-    public function extract($data, CompiledRoute $compiledRoute, Route $route)
+    public function extractUriArgs($data, CompiledRoute $compiledRoute, Route $route)
     {
         foreach ($this->extractors as $extractor) {
-            $data = $extractor->extract($data, $compiledRoute, $route);
+            $data = $extractor->extractUriArgs($data, $compiledRoute, $route);
         }
 
         return $data;

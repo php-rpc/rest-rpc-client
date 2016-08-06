@@ -14,5 +14,5 @@ interface ArgumentExtractorInterface
      *
      * @return mixed
      */
-    public function extract($data, CompiledRoute $compiledRoute, Route $route);
+    public function extractUriArgs($data, CompiledRoute $compiledRoute, Route $route);
 }
