@@ -61,7 +61,6 @@ class RoutedFactoryTest extends \PHPUnit_Framework_TestCase
         ];
         $request = $factory->encode($this->createRequestMock(self::PLAIN_METHOD, $data));
         self::assertSame('/namespace/value/method', $request->getUri()->getPath());
-        var_dump((string)$request->getUri());
         self::assertSame(json_encode($data), (string)$request->getBody());
     }
 }
