@@ -3,6 +3,7 @@ namespace ScayTrase\Api\Rest;
 
 use ScayTrase\Api\Rpc\RpcErrorInterface;
 
+/** @internal */
 final class RpcError implements RpcErrorInterface
 {
     /** @var  int */
@@ -23,13 +24,13 @@ final class RpcError implements RpcErrorInterface
     }
 
 
-    /** @return int */
+    /** {@inheritdoc} */
     public function getCode()
     {
         return $this->code;
     }
 
-    /** @return string */
+    /** {@inheritdoc} */
     public function getMessage()
     {
         return $this->message;
