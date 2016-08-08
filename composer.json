@@ -1,5 +1,5 @@
 {
-  "name": "symfony-rpc/rest-rpc-client",
+  "name": "php-rpc/rest-rpc-client",
   "description": "RPC Client for REST services",
   "minimum-stability": "stable",
   "license": "MIT",
